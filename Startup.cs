@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using CedarWebApp.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +23,7 @@ namespace CedarWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<CedarContext>(options => options.UseMySql(Configuration["DBInfo:ConnectionString"]));
             services.AddSession();            
             services.AddMvc();
         }
@@ -35,6 +38,7 @@ namespace CedarWebApp
             
 
             app.UseStaticFiles();
+            app.UseSession();
             app.UseMvc();
         }
     }
