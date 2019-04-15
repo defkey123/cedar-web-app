@@ -11,14 +11,11 @@ namespace CedarWebApp.Models
         public int UserId {get;set;}
 
         [Required]
-        [Display(Name="First Name")]
-        public string FirstName {get;set;}
-
-        [Required]
-        [Display(Name="Last Name")]
-        public string LastName {get;set;}
+        [Display(Name="Restaurant Name")]
+        public string RestaurantName {get;set;}
         
         [Required]
+        [MinLength(4, ErrorMessage="Username must be 4 characters or longer!")]
         public string Username {get;set;}
 
         [DataType(DataType.Password)]

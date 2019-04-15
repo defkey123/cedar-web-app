@@ -107,7 +107,9 @@ namespace CedarWebApp.Controllers
             int? userId = HttpContext.Session.GetInt32("logged_in_id");
             if (userId is null) return RedirectToAction("LoginReg");
 
-            return View("Dashboard");
+            User CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+
+            return View(CurrentUser);
         }
 
     }
