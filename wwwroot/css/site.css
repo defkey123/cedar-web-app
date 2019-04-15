@@ -5,6 +5,12 @@ body {
     padding-bottom: 20px;
 }
 
+.split {
+    padding: 4%;
+    vertical-align: top;
+    display: inline-block
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
