@@ -112,5 +112,16 @@ namespace CedarWebApp.Controllers
             return View(CurrentUser);
         }
 
+        [HttpGet("menus")]
+        public IActionResult Menus()
+        {
+            int? userId = HttpContext.Session.GetInt32("logged_in_id");
+            if (userId is null) return RedirectToAction("LoginReg");
+
+            User CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+
+            return View(CurrentUser);
+        }
+
     }
 }
