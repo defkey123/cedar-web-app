@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CedarWebApp.Migrations
 {
     [DbContext(typeof(CedarContext))]
-    [Migration("20190415184808_LoginMigration")]
-    partial class LoginMigration
+    [Migration("20190416192436_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
