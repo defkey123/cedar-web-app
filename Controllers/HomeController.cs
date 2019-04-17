@@ -145,12 +145,14 @@ namespace CedarWebApp.Controllers
 
                 if (foodInDb is null)
                 {
-                    ModelState.AddModelError("Name", "A food already exists with this name!");
-                    return View("NewFood");
+                    dbContext.Foods.Add(foodSubmission);
+                    dbContext.SaveChanges();
+                    return RedirectToAction("Foods");
                 }
                 else
                 {
-                    return RedirectToAction("Foods");
+                    ModelState.AddModelError("Name", "A food already exists with this name!");
+                    return View("NewFood");
                 }
 
             }
