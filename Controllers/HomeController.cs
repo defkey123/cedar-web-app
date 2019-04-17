@@ -112,15 +112,49 @@ namespace CedarWebApp.Controllers
             return View(CurrentUser);
         }
 
-        [HttpGet("menus")]
-        public IActionResult Menus()
+        [HttpGet("foods")]
+        public IActionResult Foods()
         {
             int? userId = HttpContext.Session.GetInt32("logged_in_id");
             if (userId is null) return RedirectToAction("LoginReg");
 
-            User CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+            FoodDashboard dash = new FoodDashboard();
+            dash.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
 
-            return View(CurrentUser);
+            return View(dash);
+        }
+
+        [HttpGet("foods/new")]
+        public IActionResult NewFood()
+        {
+            int? userId = HttpContext.Session.GetInt32("logged_in_id");
+            if (userId is null) return RedirectToAction("LoginReg");
+
+            return View();
+        }
+
+        [HttpPost("foods/new")]
+        public IActionResult PostNewFood(FoodItem foodSubmission)
+        {
+            int? userId = HttpContext.Session.GetInt32("logged_in_id");
+            if (userId is null) return RedirectToAction("LoginReg");
+
+            if (ModelState.IsValid)
+            {
+                var foodInDb = dbContext.Foods.FirstOrDefault(u => u.Name == foodSubmission.Name);
+
+                if (foodInDb is null)
+                {
+                    ModelState.AddModelError("Name", "A food already exists with this name!");
+                    return View("NewFood");
+                }
+                else
+                {
+                    return RedirectToAction("Foods");
+                }
+
+            }
+            return View("NewFood");
         }
 
     }
