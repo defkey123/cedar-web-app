@@ -3,14 +3,16 @@ using System;
 using CedarWebApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CedarWebApp.Migrations
 {
     [DbContext(typeof(CedarContext))]
-    partial class CedarContextModelSnapshot : ModelSnapshot
+    [Migration("20190417055114_First")]
+    partial class First
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
