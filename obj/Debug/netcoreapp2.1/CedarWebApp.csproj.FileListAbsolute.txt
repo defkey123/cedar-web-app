@@ -30,3 +30,4 @@ C:\Users\Valentin\Documents\Coding\CedarWebApp\obj\Debug\netcoreapp2.1\CedarWebA
 C:\Users\Valentin\Documents\Coding\CedarWebApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Dashboard.g.cshtml.cs
 C:\Users\Valentin\Documents\Coding\CedarWebApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\NewFood.g.cshtml.cs
 C:\Users\Valentin\Documents\Coding\CedarWebApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Foods.g.cshtml.cs
+C:\Users\Valentin\Documents\Coding\CedarWebApp\obj\Debug\netcoreapp2.1\Razor\Views\Image\ImageTest.g.cshtml.cs

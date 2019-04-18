@@ -1,52 +1,72 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 
-namespace ImageUploadDemo.Controllers
+namespace CedarWebApp.Controllers
 {
-    [Route("api/image")]
-    public class ImageController : ControllerBase
+    public class ImageController : Controller
     {
-        public static IHostingEnvironment _environment;
-        public ImageController(IHostingEnvironment environment)
-        {
-            _environment = environment;
-        }
-        public class FIleUploadAPI
-        {
-            public IFormFile files { get; set; }
-        }
-        [HttpPost]
-        public string Post(FIleUploadAPI files)
-        {
-            if (files.files.Length > 0)
-            {
-                try
-                {
-                    if (!Directory.Exists(_environment.WebRootPath + "\\uploads\\"))
-                    {
-                        Directory.CreateDirectory(_environment.WebRootPath + "\\uploads\\");
-                    }
-                    using (FileStream filestream = System.IO.File.Create(_environment.WebRootPath + "\\uploads\\" + files.files.FileName))
-                    {
-                        files.files.CopyTo(filestream);
-                        filestream.Flush();
-                        return "\\uploads\\" + files.files.FileName;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return ex.ToString();
-                }
-            }
-            else
-            {
-                return "Unsuccessful";
-            }
+        private readonly IHostingEnvironment _environment;
 
+        // Constructor
+        public ImageController(IHostingEnvironment IHostingEnvironment)
+        {
+            _environment = IHostingEnvironment;
+        }
+
+        [HttpGet("api/image")]
+        public IActionResult ImageTest()
+        {
+            return View();
+        }
+
+        [HttpPost("api/image")]
+        public IActionResult ImageTest(string name)
+        {
+            var newFileName = string.Empty;
+
+            if (HttpContext.Request.Form.Files != null)
+            {
+                var fileName = string.Empty;
+                string PathDB = string.Empty;
+
+                var files = HttpContext.Request.Form.Files;
+
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        //Getting FileName
+                        fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+
+                        //Assigning Unique Filename (Guid)
+                        var myUniqueFileName = Convert.ToString(Guid.NewGuid());
+
+                        //Getting file Extension
+                        var FileExtension = Path.GetExtension(fileName);
+
+                        // concating  FileName + FileExtension
+                        newFileName = myUniqueFileName + FileExtension;
+
+                        // Combines two strings into a path.
+                        fileName = Path.Combine(_environment.WebRootPath, "demoImages") + $@"\{newFileName}";
+
+                        // if you want to store path of folder in database
+                        PathDB = "demoImages/" + newFileName;
+
+                        using (FileStream fs = System.IO.File.Create(fileName))
+                        {
+                            file.CopyTo(fs);
+                            fs.Flush();
+                        }
+                    }
+                }
+
+
+            }
+            return View();
         }
     }
 }
