@@ -20,6 +20,7 @@ namespace CedarWebApp.Controllers
         public IActionResult ImageTest()
         {
             return View();
+
         }
 
         [HttpPost("api/image")]
@@ -51,10 +52,10 @@ namespace CedarWebApp.Controllers
                         newFileName = myUniqueFileName + FileExtension;
 
                         // Combines two strings into a path.
-                        fileName = Path.Combine(_environment.WebRootPath, "demoImages") + $@"\{newFileName}";
+                        fileName = Path.Combine(_environment.WebRootPath, "user-upload") + $@"\{newFileName}";
 
                         // if you want to store path of folder in database
-                        PathDB = "demoImages/" + newFileName;
+                        PathDB = "user-upload/" + newFileName;
 
                         using (FileStream fs = System.IO.File.Create(fileName))
                         {
@@ -63,8 +64,6 @@ namespace CedarWebApp.Controllers
                         }
                     }
                 }
-
-
             }
             return View();
         }

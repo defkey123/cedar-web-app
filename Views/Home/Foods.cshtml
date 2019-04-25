@@ -6,14 +6,18 @@
 <hr>
 <a href="foods/new" class="split"><button><h2>New Food</h2></button></a>
 <br>
+<p>@Model.Foods</p>
 @{
-    foreach(FoodItem f in @Model.Foods)
+    if(@Model.Foods != null)
     {
-        <div>
-            <a href="foods/edit/@f.FoodItemId">
-                <p>@f.Name</p>
-            </a>
-            <p>@f.Description</p>
-        </div>
+        foreach(FoodItem f in @Model.Foods)
+        {
+            <div>
+                <a href="foods/edit/@f.FoodItemId">
+                    <p>@f.Name</p>
+                </a>
+                <p>@f.Description</p>
+            </div>
+        }
     }
 }

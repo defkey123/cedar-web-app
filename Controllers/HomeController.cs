@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +17,12 @@ namespace CedarWebApp.Controllers
     public class HomeController : Controller
     {
         private CedarContext dbContext;
-        public HomeController(CedarContext context)
+        private readonly IHostingEnvironment _environment;
+
+        public HomeController(CedarContext context, IHostingEnvironment IHostingEnvironment)
         {
             dbContext = context;
+            _environment = IHostingEnvironment;
         }
         [HttpGet("")]
         public IActionResult Index()
@@ -120,6 +126,7 @@ namespace CedarWebApp.Controllers
 
             FoodDashboard dash = new FoodDashboard();
             dash.CurrentUser = dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+            dash.Foods = dbContext.Foods.ToList();
 
             return View(dash);
         }
@@ -134,7 +141,7 @@ namespace CedarWebApp.Controllers
         }
 
         [HttpPost("foods/new")]
-        public IActionResult PostNewFood(FoodItem foodSubmission)
+        public IActionResult NewFood(FoodItem foodSubmission)
         {
             int? userId = HttpContext.Session.GetInt32("logged_in_id");
             if (userId is null) return RedirectToAction("LoginReg");
@@ -145,8 +152,54 @@ namespace CedarWebApp.Controllers
 
                 if (foodInDb is null)
                 {
+
+                    //path in db to img name
+                    string PathDB = string.Empty;
+
+                    //image to ImgUrl in db
+                    var newFileName = string.Empty;
+
+                    if (HttpContext.Request.Form.Files != null)
+                    {
+                        var fileName = string.Empty;
+
+                        var files = HttpContext.Request.Form.Files;
+
+                        foreach (var file in files)
+                        {
+                            if (file.Length > 0)
+                            {
+                                //Getting FileName
+                                fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+
+                                //Assigning Unique Filename (Guid)
+                                var myUniqueFileName = Convert.ToString(Guid.NewGuid());
+
+                                //Getting file Extension
+                                var FileExtension = Path.GetExtension(fileName);
+
+                                // concating  FileName + FileExtension
+                                newFileName = myUniqueFileName + FileExtension;
+
+                                // Combines two strings into a path.
+                                fileName = Path.Combine(_environment.WebRootPath, "user-upload") + $@"\{newFileName}";
+
+                                // if you want to store path of folder in database
+                                PathDB = "user-upload/" + newFileName;
+
+                                using (FileStream fs = System.IO.File.Create(fileName))
+                                {
+                                    file.CopyTo(fs);
+                                    fs.Flush();
+                                }
+                            }
+                        }
+                    }
+
+                    foodSubmission.ImageUrl = PathDB;
                     dbContext.Foods.Add(foodSubmission);
                     dbContext.SaveChanges();
+
                     return RedirectToAction("Foods");
                 }
                 else
